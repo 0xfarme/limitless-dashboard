@@ -42,8 +42,8 @@ exports.handler = async (event) => {
     // Format state from positions
     const state = formatState(positions);
 
-    // Update points history with current data
-    const updatedPointsHistory = await updatePointsHistory(points, volume);
+    // Update points history with current data (pass trades for volume calculation)
+    const updatedPointsHistory = await updatePointsHistory(points, trades);
 
     // Calculate and update weekly summary
     const weeklySummary = calculateWeeklySummary(trades);
@@ -549,7 +549,7 @@ async function calculateWeeklyVolume(trades) {
  * Update points history with current data
  * Appends a new entry with current date, points, and volume
  */
-async function updatePointsHistory(points, volume) {
+async function updatePointsHistory(points, trades) {
   console.log('Updating points history...');
 
   const history = await fetchPointsHistory();
@@ -561,8 +561,15 @@ async function updatePointsHistory(points, volume) {
   const season2 = points?.season2 || points?.data?.season2 || 0;
   const currentMonth = points?.currentMonth || points?.data?.currentMonth || 0;
 
-  // Extract volume data
-  const totalVolume = volume?.total || volume?.data?.total || volume || 0;
+  // Calculate total volume from all trades
+  let totalVolume = 0;
+  if (trades && trades.length > 0) {
+    totalVolume = trades.reduce((sum, trade) => {
+      const decimals = trade.market?.collateral?.decimals || 6;
+      const cost = parseFloat(trade.outcomeTokenNetCost || '0') / Math.pow(10, decimals);
+      return sum + cost;
+    }, 0);
+  }
 
   // Check if we already have an entry for today
   const existingEntryIndex = history.findIndex(entry => entry.date === currentDate);
