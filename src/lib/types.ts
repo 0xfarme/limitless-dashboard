@@ -28,6 +28,25 @@ export interface Stats {
   uptimeHours: string;
   startTime: number;
   lastUpdated: number;
+  points?: any; // Points data from API
+  tradedVolume?: any; // Volume data from API
+}
+
+export interface DailyStats {
+  date: string;
+  trades: number;
+  wins: number;
+  losses: number;
+  profitUSDC: number;
+  lossUSDC: number;
+  netProfitUSDC: number;
+  volumeUSDC: number;
+}
+
+export interface EpochPoints {
+  epoch: string | number;
+  points: number;
+  rank?: number;
 }
 
 export interface Holding {
