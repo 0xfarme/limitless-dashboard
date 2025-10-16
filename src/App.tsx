@@ -191,7 +191,7 @@ function App() {
                 {stats && (
                   <div className="mb-6">
                     <h2 className="text-2xl font-bold text-gray-900 mb-4">Performance Metrics</h2>
-                    <StatsOverview stats={stats} />
+                    <StatsOverview stats={stats} trades={trades} dateFilter="all" />
                   </div>
                 )}
                 <DailyBreakdown trades={trades} />

@@ -18,18 +18,6 @@ const formatDate = (timestamp: string | number | undefined): string => {
   }
 };
 
-// Helper function to format date for display (short format)
-const formatDateShort = (timestamp: string | number | undefined): string => {
-  if (!timestamp) return '-';
-  try {
-    const date = new Date(timestamp);
-    if (isNaN(date.getTime())) return '-';
-    return date.toLocaleDateString();
-  } catch {
-    return '-';
-  }
-};
-
 // Helper function to safely parse number
 const safeParseFloat = (value: string | number | undefined, defaultValue: number = 0): number => {
   if (value === undefined || value === null) return defaultValue;
