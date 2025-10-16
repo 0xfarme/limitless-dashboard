@@ -26,7 +26,8 @@ exports.handler = async (event) => {
     const positions = await fetchPositions();
     const tradesRaw = await fetchTrades();
     const points = await fetchPoints();
-    const volume = await fetchTradedVolume();
+    // Volume will be calculated from trades, not from a separate endpoint
+    const volume = null;
 
     // Sort trades by timestamp descending (newest first)
     const trades = tradesRaw.sort((a, b) => {
@@ -271,7 +272,7 @@ async function fetchPoints() {
     const response = await makeAuthenticatedRequest(`${LIMITLESS_API_URL}/portfolio/points`);
     const data = await response.json();
 
-    console.log(`Fetched points data`);
+    console.log('Raw points API response:', JSON.stringify(data));
     return data;
   } catch (error) {
     console.error('Error fetching points:', error);
