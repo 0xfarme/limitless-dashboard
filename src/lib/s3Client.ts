@@ -245,8 +245,17 @@ export async function fetchStats(): Promise<Stats | null> {
     try {
       const data = await fetchFile('stats.json');
       const existingStats = JSON.parse(data) as Stats;
-      // Merge with calculated stats, preferring existing stats for some fields
+      // Preserve the points history we already loaded
+      const pointsWithHistory = stats.points;
+      // Merge with calculated stats, preferring existing stats for most fields
       stats = { ...stats, ...existingStats };
+      // But keep the points history from points_hist.json
+      if (pointsWithHistory?.history) {
+        stats.points = {
+          ...stats.points,
+          history: pointsWithHistory.history,
+        };
+      }
     } catch {
       // Use calculated stats
     }
